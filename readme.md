@@ -2,6 +2,11 @@
 
 A lightweight and customizable form validation library to simplify form handling in both JavaScript and TypeScript.
 
+[GitHub Link](https://github.com/ikwerre-dev/Form-Validator-Library.git)
+
+[NPM Link](https://www.npmjs.com/package/robinson-form-validator?activeTab=readme)
+
+
 ## Features
 
 - Simple API for validating form fields
