@@ -43,6 +43,7 @@ const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 const postalCodeRegex = /^[0-9]{5}(-[0-9]{4})?$/;
 const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
 console.log('Robinson Honour is Cooking :)');
+console.log("1.0.4");
 const calculatePasswordStrength = (password) => {
     let strength = 0;
     if (password.length >= 8)
