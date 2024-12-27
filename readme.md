@@ -28,47 +28,94 @@ npm install robinson-form-validator
 # Javascript Installation & Example:
 
 ```javascript
-
+import React from 'react';
 import useFormValidator from 'robinson-form-validator';
 
 function App() {
   const initialValues = {
     email: '',
     password: '',
+    creditCard: '',
+    cvv: '',
+    phone: '',
+    date: '',
+    postalCode: '',
+    url: '',
+    numeric: '',
   };
 
   const validationRules = {
     email: {
+      type: 'email',
       required: true,
-      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
     },
     password: {
+      type: 'password',
       required: true,
       minLength: 8,
+      passwordStrength: 10,
+    },
+    creditCard: {
+      type: 'creditCard',
+      required: true,
+    },
+    cvv: {
+      type: 'cvv',
+      required: true,
+    },
+    phone: {
+      type: 'phone',
+      required: true,
+    },
+    date: {
+      type: 'date',
+      required: true,
+    },
+    postalCode: {
+      type: 'postalCode',
+      required: true,
+    },
+    url: {
+      type: 'url',
+      required: true,
+    },
+    numeric: {
+      type: 'numeric',
+      required: true,
     },
   };
 
-  const { values, errors, handleChange, handleSubmit, isSubmitting } = useFormValidator(initialValues, validationRules);
+  const { values, errors, handleChange, handleSubmit, isSubmitting, passwordStrength } = useFormValidator(initialValues, validationRules);
 
   const onSubmit = handleSubmit(() => {
     console.log('Form submitted', values);
   });
 
+  const getPasswordStrengthColor = () => {
+    if (passwordStrength < 30) return 'red';
+    if (passwordStrength < 70) return 'orange';
+    return 'green';
+  };
+
+  const renderInput = (name, label, type = 'text') => (
+    <div>
+      <label htmlFor={name}>{label}:</label>
+      <input
+        type={type}
+        id={name}
+        name={name}
+        value={values[name]}
+        onChange={handleChange}
+        placeholder={`Enter your ${label.toLowerCase()}`}
+      />
+      {errors[name] && <span className="error">{errors[name]}</span>}
+    </div>
+  );
+
   return (
     <form onSubmit={onSubmit}>
-      <div>
-        <label htmlFor="email">Email:</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value={values.email}
-          onChange={handleChange}
-          placeholder="Enter your email"
-        />
-        {errors.email && <span className="error">{errors.email}</span>}
-      </div>
-
+      {renderInput('email', 'Email', 'email')}
+      
       <div>
         <label htmlFor="password">Password:</label>
         <input
@@ -80,7 +127,26 @@ function App() {
           placeholder="Enter your password"
         />
         {errors.password && <span className="error">{errors.password}</span>}
+        <div>
+          Password Strength:
+          <div
+            style={{
+              width: `${passwordStrength}%`,
+              height: '5px',
+              backgroundColor: getPasswordStrengthColor(),
+              transition: 'width 0.3s, background-color 0.3s',
+            }}
+          />
+        </div>
       </div>
+
+      {renderInput('creditCard', 'Credit Card')}
+      {renderInput('cvv', 'CVV')}
+      {renderInput('phone', 'Phone Number', 'tel')}
+      {renderInput('date', 'Date', 'date')}
+      {renderInput('postalCode', 'Postal Code')}
+      {renderInput('url', 'URL', 'url')}
+      {renderInput('numeric', 'Numeric Value', 'number')}
 
       <button type="submit" disabled={isSubmitting}>
         {isSubmitting ? 'Submitting...' : 'Submit'}

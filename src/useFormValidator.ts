@@ -21,8 +21,7 @@ const phoneRegex = /^\+?[1-9]\d{1,14}$/;
 const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
 const postalCodeRegex = /^[0-9]{5}(-[0-9]{4})?$/;
 const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
-console.log('Robinson Honour is Cooking :)');
-
+console.log('Robinson Honour is Cooking :)')
 const calculatePasswordStrength = (password: string): number => {
   let strength = 0;
   if (password.length >= 8) strength += 25;
