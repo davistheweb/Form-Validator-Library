@@ -6,16 +6,27 @@ export default {
   input: './src/index.ts',
   output: [
     {
-      file: 'dist/index.js',
+      file: 'dist/index.cjs',
       format: 'cjs',
-      exports: 'named', 
+      exports: 'named', // Changed from 'default' to 'named'
+      globals: {
+        react: 'React',
+        'react-dom': 'ReactDOM',
+      },
     },
     {
-      file: 'dist/index.es.js',
+      file: 'dist/index.esm.js',
       format: 'esm',
-      exports: 'named', 
+      exports: 'named', // Changed from 'default' to 'named'
     },
   ],
-  plugins: [typescript(), resolve(), commonjs()],
+  plugins: [
+    typescript({
+      declaration: true,
+      declarationDir: 'dist',
+    }),
+    resolve(),
+    commonjs()
+  ],
   external: ['react', 'react-dom'],
 };
