@@ -10,7 +10,7 @@
   "keywords": [],
   "type": "module",
   "author": "Robinson Honour",
-  "license": "ISC",
+  "license": "MIT",
   "description": "A powerful and flexible Form Validator library that simplifies form validation for both JavaScript and TypeScript applications, ensuring seamless data validation with customizable rules and easy integration. -By Robinson Honour - ikwerre-dev",
   "dependencies": {
     "react": "^19.0.0"
