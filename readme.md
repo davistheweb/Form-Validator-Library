@@ -29,52 +29,69 @@ npm install robinson-form-validator
 
 ```javascript
 
-import { useFormValidator } from 'robinson-form-validator';
+import useFormValidator from 'robinson-form-validator';
 
-function MyForm() {
-  const { handleChange, handleSubmit, errors } = useFormValidator({
+function App() {
+  const initialValues = {
+    email: '',
+    password: '',
+  };
+
+  const validationRules = {
     email: {
       required: true,
       pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-      message: 'Please enter a valid email address',
     },
     password: {
       required: true,
       minLength: 8,
-      message: 'Password must be at least 8 characters long',
     },
-  });
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    handleSubmit(() => {
-      // Your form submit logic here
-      console.log('Form submitted');
-    });
   };
+
+  const { values, errors, handleChange, handleSubmit, isSubmitting } = useFormValidator(initialValues, validationRules);
+
+  const onSubmit = handleSubmit(() => {
+    console.log('Form submitted', values);
+  });
 
   return (
     <form onSubmit={onSubmit}>
-      <input
-        type="email"
-        name="email"
-        onChange={handleChange}
-        placeholder="Enter your email"
-      />
-      {errors.email && <span>{errors.email}</span>}
+      <div>
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={values.email}
+          onChange={handleChange}
+          placeholder="Enter your email"
+        />
+        {errors.email && <span className="error">{errors.email}</span>}
+      </div>
 
-      <input
-        type="password"
-        name="password"
-        onChange={handleChange}
-        placeholder="Enter your password"
-      />
-      {errors.password && <span>{errors.password}</span>}
+      <div>
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={values.password}
+          onChange={handleChange}
+          placeholder="Enter your password"
+        />
+        {errors.password && <span className="error">{errors.password}</span>}
+      </div>
 
-      <button type="submit">Submit</button>
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Submitting...' : 'Submit'}
+      </button>
     </form>
   );
 }
+
+export default App;
+
+
 
 ```
 

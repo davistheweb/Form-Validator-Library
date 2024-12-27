@@ -38,6 +38,7 @@ const useFormValidator = (initialValues, validationRules) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const validateField = (field, value) => __awaiter(void 0, void 0, void 0, function* () {
         const rule = validationRules[field];
+        // Ensure validationRules has the field before continuing
         if (!rule)
             return null;
         if (rule.required && !value.trim())
@@ -65,10 +66,13 @@ const useFormValidator = (initialValues, validationRules) => {
     });
     const validate = (...args_1) => __awaiter(void 0, [...args_1], void 0, function* (fieldValues = values) {
         const tempErrors = {};
+        // Ensure validation rules are applied only to fields defined in validationRules
         for (const field in validationRules) {
-            const error = yield validateField(field, fieldValues[field]);
-            if (error)
-                tempErrors[field] = error;
+            if (field in fieldValues) {
+                const error = yield validateField(field, fieldValues[field]);
+                if (error)
+                    tempErrors[field] = error;
+            }
         }
         setErrors(tempErrors);
         return tempErrors;
