@@ -1,0 +1,26 @@
+{
+  "name": "form-validator-library",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [],
+  "type": "module",
+  "author": "Robinson Honour",
+  "license": "ISC",
+  "description": "A powerful and flexible Form Validator library that simplifies form validation for both JavaScript and TypeScript applications, ensuring seamless data validation with customizable rules and easy integration. -By Robinson Honour - ikwerre-dev",
+  "dependencies": {
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
+    "@types/react": "^19.0.2",
+    "rollup": "^4.29.1",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "typescript": "^5.7.2"
+  }
+}
