@@ -164,80 +164,228 @@ export default App;
 # Typescript Installation & Example:
 
 ```typescript
-import { useFormValidator } from 'robinson-form-validator';
 
-interface FormValues {
+import React from 'react';
+import useFormValidator from 'robinson-form-validator';
+
+type FormValues = {
   email: string;
   password: string;
-}
+  creditCard: string;
+  cvv: string;
+  phone: string;
+  date: string;
+  postalCode: string;
+  url: string;
+  numeric: string;
+};
 
-function MyForm() {
-  const { handleChange, handleSubmit, errors } = useFormValidator<FormValues>({
+type ValidationRules = {
+  [key in keyof FormValues]: {
+    type: string;
+    required: boolean;
+    minLength?: number;
+    passwordStrength?: number;
+  };
+};
+
+function App() {
+  const initialValues: FormValues = {
+    email: '',
+    password: '',
+    creditCard: '',
+    cvv: '',
+    phone: '',
+    date: '',
+    postalCode: '',
+    url: '',
+    numeric: '',
+  };
+
+  const validationRules: ValidationRules = {
     email: {
+      type: 'email',
       required: true,
-      pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-      message: 'Please enter a valid email address',
     },
     password: {
+      type: 'password',
       required: true,
       minLength: 8,
-      message: 'Password must be at least 8 characters long',
+      passwordStrength: 10,
     },
+    creditCard: {
+      type: 'creditCard',
+      required: true,
+    },
+    cvv: {
+      type: 'cvv',
+      required: true,
+    },
+    phone: {
+      type: 'phone',
+      required: true,
+    },
+    date: {
+      type: 'date',
+      required: true,
+    },
+    postalCode: {
+      type: 'postalCode',
+      required: true,
+    },
+    url: {
+      type: 'url',
+      required: true,
+    },
+    numeric: {
+      type: 'numeric',
+      required: true,
+    },
+  };
+
+  const { values, errors, handleChange, handleSubmit, isSubmitting, passwordStrength } = useFormValidator<FormValues, ValidationRules>(
+    initialValues,
+    validationRules
+  );
+
+  const onSubmit = handleSubmit(() => {
+    console.log('Form submitted', values);
   });
 
-  const onSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleSubmit(() => {
-      // Your form submit logic here
-      console.log('Form submitted');
-    });
+  const getPasswordStrengthColor = (): string => {
+    if (passwordStrength < 30) return 'red';
+    if (passwordStrength < 70) return 'orange';
+    return 'green';
   };
+
+  const renderInput = (name: keyof FormValues, label: string, type: string = 'text'): JSX.Element => (
+    <div>
+      <label htmlFor={name}>{label}:</label>
+      <input
+        type={type}
+        id={name}
+        name={name}
+        value={values[name]}
+        onChange={handleChange}
+        placeholder={`Enter your ${label.toLowerCase()}`}
+      />
+      {errors[name] && <span className="error">{errors[name]}</span>}
+    </div>
+  );
 
   return (
     <form onSubmit={onSubmit}>
-      <input
-        type="email"
-        name="email"
-        onChange={handleChange}
-        placeholder="Enter your email"
-      />
-      {errors.email && <span>{errors.email}</span>}
+      {renderInput('email', 'Email', 'email')}
+      
+      <div>
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          value={values.password}
+          onChange={handleChange}
+          placeholder="Enter your password"
+        />
+        {errors.password && <span className="error">{errors.password}</span>}
+        <div>
+          Password Strength:
+          <div
+            style={{
+              width: `${passwordStrength}%`,
+              height: '5px',
+              backgroundColor: getPasswordStrengthColor(),
+              transition: 'width 0.3s, background-color 0.3s',
+            }}
+          />
+        </div>
+      </div>
 
-      <input
-        type="password"
-        name="password"
-        onChange={handleChange}
-        placeholder="Enter your password"
-      />
-      {errors.password && <span>{errors.password}</span>}
+      {renderInput('creditCard', 'Credit Card')}
+      {renderInput('cvv', 'CVV')}
+      {renderInput('phone', 'Phone Number', 'tel')}
+      {renderInput('date', 'Date', 'date')}
+      {renderInput('postalCode', 'Postal Code')}
+      {renderInput('url', 'URL', 'url')}
+      {renderInput('numeric', 'Numeric Value', 'number')}
 
-      <button type="submit">Submit</button>
+      <button type="submit" disabled={isSubmitting}>
+        {isSubmitting ? 'Submitting...' : 'Submit'}
+      </button>
     </form>
   );
 }
+
+export default App;
 
 ```
 
 
 # API
 
-## useFormValidator(config: ValidationConfig)
+## `useFormValidator(config: ValidationConfig)`
 
-The `useFormValidator` hook accepts a config object where you define the validation rules for your form fields. It returns an object containing the following:
+The `useFormValidator` hook accepts a `config` object where you define the validation rules for your form fields. It returns an object containing the following:
 
 - `handleChange`: A function to handle changes to form inputs.
 - `handleSubmit`: A function to handle form submission.
+- `values`: An object containing the current values of the form fields.
 - `errors`: An object containing validation error messages for each field.
+- `isSubmitting`: A boolean that indicates if the form is currently being submitted.
+- `passwordStrength`: A numeric value representing the strength of the password (only for password fields).
 
-## ValidationConfig
+### Example Usage:
 
-The `ValidationConfig` object defines validation rules for each field. A field can have the following properties:
+```typescript
+const { values, errors, handleChange, handleSubmit, isSubmitting, passwordStrength } = useFormValidator(initialValues, validationRules);
 
-- `required`: Boolean, specifies whether the field is required.
-- `minLength`: Number, the minimum length of the field value.
-- `maxLength`: Number, the maximum length of the field value.
-- `pattern`: A regular expression to match the value.
-- `message`: Custom error message to display when validation fails.
+```
+
+## Validation Rules
+
+```javascript
+const validationRules = {
+  email: {
+    type: 'email',
+    required: true,
+  },
+  password: {
+    type: 'password',
+    required: true,
+    minLength: 8,
+    passwordStrength: 10,
+  },
+  creditCard: {
+    type: 'creditCard',
+    required: true,
+  },
+  cvv: {
+    type: 'cvv',
+    required: true,
+  },
+  phone: {
+    type: 'phone',
+    required: true,
+  },
+  date: {
+    type: 'date',
+    required: true,
+  },
+  postalCode: {
+    type: 'postalCode',
+    required: true,
+  },
+  url: {
+    type: 'url',
+    required: true,
+  },
+  numeric: {
+    type: 'numeric',
+    required: true,
+  },
+};
+
+```
 
 
 # Example:
@@ -250,6 +398,8 @@ interface ValidationConfig {
     maxLength?: number;
     pattern?: RegExp;
     message?: string;
+    type: 'email' | 'password' | 'creditCard' | 'cvv' | 'phone' | 'date' | 'postalCode' | 'url' | 'numeric';
+    passwordStrength?: number;  // Specifically for password fields
   };
 }
 
